@@ -18,6 +18,7 @@ namespace FiniteDifferenceMethod
         private int _previousX = -1;
         private int _previousY = -1;
         private int _numberOfIterations = 0;
+        private double _maxValue = 0;
 
         public MainWindow()
         {
@@ -253,11 +254,12 @@ namespace FiniteDifferenceMethod
             {
                 _numberOfIterations++;
                 isFinished = true;
+                
 
                 for (var i = 0; i < x.Count; i++)
                 {
                     var tmpValue = _displayElementsValues2DArray[y[i]][x[i]].Value;
-
+                    
                     _displayElementsValues2DArray[y[i]][x[i]].Value =
                         (1 - _beta) * _displayElementsValues2DArray[y[i]][x[i]].Value +
                         _beta * ((
@@ -268,10 +270,120 @@ namespace FiniteDifferenceMethod
                                  ) / 4.0);
                     if (Math.Abs(tmpValue - _displayElementsValues2DArray[y[i]][x[i]].Value) > _epsilon)
                         isFinished = false;
+                    if (tmpValue > _maxValue) _maxValue = tmpValue;
                 }
             }
 
             IterationsTextBox.Text = _numberOfIterations.ToString();
+        }
+
+        private void DisplayColorMapButton_Click(object sender, EventArgs e)
+        {
+            var step = _maxValue / 11;
+            DrawArea.Image = new Bitmap(DrawArea.Width,DrawArea.Height);
+            
+            LabelLevel0.Text = step.ToString("F4") + @" - " + 0.ToString("F4");
+            LabelLevel1.Text = (2 * step).ToString("F4") + @" - " + step.ToString("F4");
+            LabelLevel2.Text = (3 * step).ToString("F4") + @" - " + (2 * step).ToString("F4");
+            LabelLevel3.Text = (4 * step).ToString("F4") + @" - " + (3 * step).ToString("F4");
+            LabelLevel4.Text = (5 * step).ToString("F4") + @" - " + (4 * step).ToString("F4");
+            LabelLevel5.Text = (6 * step).ToString("F4") + @" - " + (5 * step).ToString("F4");
+            LabelLevel6.Text = (7 * step).ToString("F4") + @" - " + (6 * step).ToString("F4");
+            LabelLevel7.Text = (8 * step).ToString("F4") + @" - " + (7 * step).ToString("F4");
+            LabelLevel8.Text = (9 * step).ToString("F4") + @" - " + (8 * step).ToString("F4");
+            LabelLevel9.Text = (10 * step).ToString("F4") + @" - " + (9 * step).ToString("F4");
+            LabelLevel10.Text = _maxValue.ToString("F4") + @" - " + (10 * step).ToString("F4");
+
+
+
+            for (var i = 0; i < _displayElementsValues2DArray.Length; i++)
+            {
+                for (var j = 0; j < _displayElementsValues2DArray[i].Length; j++)
+                {
+                    if (Math.Abs(_displayElementsValues2DArray[i][j].Value - (-1)) < 0.0001)
+                    {
+                        ((Bitmap)DrawArea.Image).SetPixel(j,i,Color.Black);
+                        continue;
+                    }
+
+                    if (_displayElementsValues2DArray[i][j].Value > 0 &&
+                        _displayElementsValues2DArray[i][j].Value <= step)
+                    {
+                        ((Bitmap)DrawArea.Image).SetPixel(j, i, Color.DarkBlue);
+                        continue;
+                    }
+
+                    if (_displayElementsValues2DArray[i][j].Value >  step &&
+                        _displayElementsValues2DArray[i][j].Value <= 2 * step)
+                    {
+                        ((Bitmap)DrawArea.Image).SetPixel(j, i, Color.Blue);
+                        continue;
+                    }
+                    if (_displayElementsValues2DArray[i][j].Value > 2*step &&
+                        _displayElementsValues2DArray[i][j].Value <= 3 * step)
+                    {
+                        ((Bitmap)DrawArea.Image).SetPixel(j, i, Color.DeepSkyBlue);
+                        continue;
+                    }
+
+                    if (_displayElementsValues2DArray[i][j].Value > 3 * step &&
+                        _displayElementsValues2DArray[i][j].Value <= 4 * step)
+                    {
+                        ((Bitmap)DrawArea.Image).SetPixel(j, i, Color.Aqua);
+                        continue;
+                    }
+
+                    if (_displayElementsValues2DArray[i][j].Value > 4 * step &&
+                        _displayElementsValues2DArray[i][j].Value <= 5 * step)
+                    {
+                        ((Bitmap)DrawArea.Image).SetPixel(j, i, Color.Aquamarine);
+                        continue;
+                    }
+
+                    if (_displayElementsValues2DArray[i][j].Value > 5 * step &&
+                        _displayElementsValues2DArray[i][j].Value <= 6 * step)
+                    {
+                        ((Bitmap)DrawArea.Image).SetPixel(j, i, Color.GreenYellow);
+                        continue;
+                    }
+
+                    if (_displayElementsValues2DArray[i][j].Value > 6 * step &&
+                        _displayElementsValues2DArray[i][j].Value <= 7 * step)
+                    {
+                        ((Bitmap)DrawArea.Image).SetPixel(j, i, Color.Yellow);
+                        continue;
+                    }
+
+                    if (_displayElementsValues2DArray[i][j].Value > 7 * step &&
+                        _displayElementsValues2DArray[i][j].Value <= 8 * step)
+                    {
+                        ((Bitmap)DrawArea.Image).SetPixel(j, i, Color.Gold);
+                        continue;
+                    }
+
+                    if (_displayElementsValues2DArray[i][j].Value > 8 * step &&
+                        _displayElementsValues2DArray[i][j].Value <= 9 * step)
+                    {
+                        ((Bitmap)DrawArea.Image).SetPixel(j, i, Color.Orange);
+                        continue;
+                    }
+
+                    if (_displayElementsValues2DArray[i][j].Value > 9 * step &&
+                        _displayElementsValues2DArray[i][j].Value <= 10 * step)
+                    {
+                        ((Bitmap)DrawArea.Image).SetPixel(j, i, Color.OrangeRed);
+                        continue;
+                    }
+
+                    if (_displayElementsValues2DArray[i][j].Value > 10 * step &&
+                        _displayElementsValues2DArray[i][j].Value <= _maxValue)
+                    {
+                        ((Bitmap)DrawArea.Image).SetPixel(j, i, Color.Red);
+                        continue;
+                    }
+                }
+            }
+            DrawArea.Refresh();
         }
     }
 }

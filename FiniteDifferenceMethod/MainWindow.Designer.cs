@@ -43,6 +43,8 @@ namespace FiniteDifferenceMethod
             this.epsilonTextBox = new System.Windows.Forms.TextBox();
             this.EpsilonLabel = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.DisplayColorMapButton = new System.Windows.Forms.Button();
             this.ResultButton = new System.Windows.Forms.Button();
             this.DrawArea = new System.Windows.Forms.PictureBox();
             this.ResetButton = new System.Windows.Forms.Button();
@@ -78,13 +80,12 @@ namespace FiniteDifferenceMethod
             this.LabelLevel0 = new System.Windows.Forms.Label();
             this.flowLayoutPanel15 = new System.Windows.Forms.FlowLayoutPanel();
             this.BackgroundLabel = new System.Windows.Forms.Label();
-            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-            this.DisplayColorMapButton = new System.Windows.Forms.Button();
             this.ApplicationMainWindowLayout.SuspendLayout();
             this.ApplicationToolBox.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
+            this.tableLayoutPanel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DrawArea)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -102,7 +103,6 @@ namespace FiniteDifferenceMethod
             this.flowLayoutPanel13.SuspendLayout();
             this.flowLayoutPanel14.SuspendLayout();
             this.flowLayoutPanel15.SuspendLayout();
-            this.tableLayoutPanel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // ApplicationMainWindowLayout
@@ -271,6 +271,31 @@ namespace FiniteDifferenceMethod
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(0, 13);
             this.label2.TabIndex = 3;
+            // 
+            // tableLayoutPanel4
+            // 
+            this.tableLayoutPanel4.ColumnCount = 1;
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel4.Controls.Add(this.DisplayColorMapButton, 0, 1);
+            this.tableLayoutPanel4.Controls.Add(this.ResultButton, 0, 0);
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 220);
+            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
+            this.tableLayoutPanel4.RowCount = 2;
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(168, 100);
+            this.tableLayoutPanel4.TabIndex = 12;
+            // 
+            // DisplayColorMapButton
+            // 
+            this.DisplayColorMapButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.DisplayColorMapButton.Location = new System.Drawing.Point(3, 53);
+            this.DisplayColorMapButton.Name = "DisplayColorMapButton";
+            this.DisplayColorMapButton.Size = new System.Drawing.Size(162, 44);
+            this.DisplayColorMapButton.TabIndex = 12;
+            this.DisplayColorMapButton.Text = "Display Color Map";
+            this.DisplayColorMapButton.UseVisualStyleBackColor = true;
+            this.DisplayColorMapButton.Click += new System.EventHandler(this.DisplayColorMapButton_Click);
             // 
             // ResultButton
             // 
@@ -445,9 +470,10 @@ namespace FiniteDifferenceMethod
             this.LabelLevel10.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.LabelLevel10.AutoSize = true;
             this.LabelLevel10.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.LabelLevel10.Location = new System.Drawing.Point(123, 0);
+            this.LabelLevel10.Location = new System.Drawing.Point(113, 0);
             this.LabelLevel10.Name = "LabelLevel10";
-            this.LabelLevel10.Size = new System.Drawing.Size(0, 16);
+            this.LabelLevel10.Padding = new System.Windows.Forms.Padding(0, 5, 10, 0);
+            this.LabelLevel10.Size = new System.Drawing.Size(10, 21);
             this.LabelLevel10.TabIndex = 0;
             // 
             // flowLayoutPanel5
@@ -464,9 +490,10 @@ namespace FiniteDifferenceMethod
             // 
             this.LabelLevel9.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.LabelLevel9.CausesValidation = false;
-            this.LabelLevel9.Location = new System.Drawing.Point(25, 0);
+            this.LabelLevel9.Location = new System.Drawing.Point(0, 0);
             this.LabelLevel9.Name = "LabelLevel9";
-            this.LabelLevel9.Size = new System.Drawing.Size(98, 29);
+            this.LabelLevel9.Padding = new System.Windows.Forms.Padding(0, 5, 10, 0);
+            this.LabelLevel9.Size = new System.Drawing.Size(123, 29);
             this.LabelLevel9.TabIndex = 0;
             // 
             // flowLayoutPanel6
@@ -483,9 +510,10 @@ namespace FiniteDifferenceMethod
             // 
             this.LabelLevel8.AutoSize = true;
             this.LabelLevel8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.LabelLevel8.Location = new System.Drawing.Point(123, 0);
+            this.LabelLevel8.Location = new System.Drawing.Point(113, 0);
             this.LabelLevel8.Name = "LabelLevel8";
-            this.LabelLevel8.Size = new System.Drawing.Size(0, 16);
+            this.LabelLevel8.Padding = new System.Windows.Forms.Padding(0, 5, 10, 0);
+            this.LabelLevel8.Size = new System.Drawing.Size(10, 21);
             this.LabelLevel8.TabIndex = 0;
             // 
             // flowLayoutPanel7
@@ -502,9 +530,10 @@ namespace FiniteDifferenceMethod
             // LabelLevel7
             // 
             this.LabelLevel7.AutoSize = true;
-            this.LabelLevel7.Location = new System.Drawing.Point(123, 0);
+            this.LabelLevel7.Location = new System.Drawing.Point(113, 0);
             this.LabelLevel7.Name = "LabelLevel7";
-            this.LabelLevel7.Size = new System.Drawing.Size(0, 16);
+            this.LabelLevel7.Padding = new System.Windows.Forms.Padding(0, 5, 10, 0);
+            this.LabelLevel7.Size = new System.Drawing.Size(10, 21);
             this.LabelLevel7.TabIndex = 0;
             // 
             // flowLayoutPanel8
@@ -521,9 +550,10 @@ namespace FiniteDifferenceMethod
             // 
             this.LabelLevel6.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.LabelLevel6.AutoSize = true;
-            this.LabelLevel6.Location = new System.Drawing.Point(123, 0);
+            this.LabelLevel6.Location = new System.Drawing.Point(113, 0);
             this.LabelLevel6.Name = "LabelLevel6";
-            this.LabelLevel6.Size = new System.Drawing.Size(0, 16);
+            this.LabelLevel6.Padding = new System.Windows.Forms.Padding(0, 5, 10, 0);
+            this.LabelLevel6.Size = new System.Drawing.Size(10, 21);
             this.LabelLevel6.TabIndex = 0;
             this.LabelLevel6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
@@ -541,9 +571,10 @@ namespace FiniteDifferenceMethod
             // 
             this.LabelLevel5.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.LabelLevel5.AutoSize = true;
-            this.LabelLevel5.Location = new System.Drawing.Point(123, 0);
+            this.LabelLevel5.Location = new System.Drawing.Point(113, 0);
             this.LabelLevel5.Name = "LabelLevel5";
-            this.LabelLevel5.Size = new System.Drawing.Size(0, 16);
+            this.LabelLevel5.Padding = new System.Windows.Forms.Padding(0, 5, 10, 0);
+            this.LabelLevel5.Size = new System.Drawing.Size(10, 21);
             this.LabelLevel5.TabIndex = 0;
             // 
             // flowLayoutPanel10
@@ -560,9 +591,10 @@ namespace FiniteDifferenceMethod
             // 
             this.LabelLevel4.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.LabelLevel4.AutoSize = true;
-            this.LabelLevel4.Location = new System.Drawing.Point(123, 0);
+            this.LabelLevel4.Location = new System.Drawing.Point(113, 0);
             this.LabelLevel4.Name = "LabelLevel4";
-            this.LabelLevel4.Size = new System.Drawing.Size(0, 16);
+            this.LabelLevel4.Padding = new System.Windows.Forms.Padding(0, 5, 10, 0);
+            this.LabelLevel4.Size = new System.Drawing.Size(10, 21);
             this.LabelLevel4.TabIndex = 0;
             // 
             // flowLayoutPanel11
@@ -579,9 +611,10 @@ namespace FiniteDifferenceMethod
             // 
             this.LabelLevel3.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.LabelLevel3.AutoSize = true;
-            this.LabelLevel3.Location = new System.Drawing.Point(123, 0);
+            this.LabelLevel3.Location = new System.Drawing.Point(113, 0);
             this.LabelLevel3.Name = "LabelLevel3";
-            this.LabelLevel3.Size = new System.Drawing.Size(0, 16);
+            this.LabelLevel3.Padding = new System.Windows.Forms.Padding(0, 5, 10, 0);
+            this.LabelLevel3.Size = new System.Drawing.Size(10, 21);
             this.LabelLevel3.TabIndex = 0;
             // 
             // flowLayoutPanel12
@@ -598,9 +631,10 @@ namespace FiniteDifferenceMethod
             // 
             this.LabelLevel2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.LabelLevel2.AutoSize = true;
-            this.LabelLevel2.Location = new System.Drawing.Point(123, 0);
+            this.LabelLevel2.Location = new System.Drawing.Point(113, 0);
             this.LabelLevel2.Name = "LabelLevel2";
-            this.LabelLevel2.Size = new System.Drawing.Size(0, 16);
+            this.LabelLevel2.Padding = new System.Windows.Forms.Padding(0, 5, 10, 0);
+            this.LabelLevel2.Size = new System.Drawing.Size(10, 21);
             this.LabelLevel2.TabIndex = 0;
             // 
             // flowLayoutPanel13
@@ -619,9 +653,10 @@ namespace FiniteDifferenceMethod
             this.LabelLevel1.AutoSize = true;
             this.LabelLevel1.BackColor = System.Drawing.Color.Blue;
             this.LabelLevel1.ForeColor = System.Drawing.Color.White;
-            this.LabelLevel1.Location = new System.Drawing.Point(123, 0);
+            this.LabelLevel1.Location = new System.Drawing.Point(113, 0);
             this.LabelLevel1.Name = "LabelLevel1";
-            this.LabelLevel1.Size = new System.Drawing.Size(0, 16);
+            this.LabelLevel1.Padding = new System.Windows.Forms.Padding(0, 5, 10, 0);
+            this.LabelLevel1.Size = new System.Drawing.Size(10, 21);
             this.LabelLevel1.TabIndex = 0;
             // 
             // flowLayoutPanel14
@@ -639,9 +674,10 @@ namespace FiniteDifferenceMethod
             this.LabelLevel0.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.LabelLevel0.AutoSize = true;
             this.LabelLevel0.ForeColor = System.Drawing.Color.White;
-            this.LabelLevel0.Location = new System.Drawing.Point(123, 0);
+            this.LabelLevel0.Location = new System.Drawing.Point(113, 0);
             this.LabelLevel0.Name = "LabelLevel0";
-            this.LabelLevel0.Size = new System.Drawing.Size(0, 16);
+            this.LabelLevel0.Padding = new System.Windows.Forms.Padding(0, 5, 10, 0);
+            this.LabelLevel0.Size = new System.Drawing.Size(10, 21);
             this.LabelLevel0.TabIndex = 0;
             // 
             // flowLayoutPanel15
@@ -670,30 +706,6 @@ namespace FiniteDifferenceMethod
             this.BackgroundLabel.Text = "Background";
             this.BackgroundLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // tableLayoutPanel4
-            // 
-            this.tableLayoutPanel4.ColumnCount = 1;
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel4.Controls.Add(this.DisplayColorMapButton, 0, 1);
-            this.tableLayoutPanel4.Controls.Add(this.ResultButton, 0, 0);
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 220);
-            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-            this.tableLayoutPanel4.RowCount = 2;
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(168, 100);
-            this.tableLayoutPanel4.TabIndex = 12;
-            // 
-            // DisplayColorMapButton
-            // 
-            this.DisplayColorMapButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.DisplayColorMapButton.Location = new System.Drawing.Point(3, 53);
-            this.DisplayColorMapButton.Name = "DisplayColorMapButton";
-            this.DisplayColorMapButton.Size = new System.Drawing.Size(162, 44);
-            this.DisplayColorMapButton.TabIndex = 12;
-            this.DisplayColorMapButton.Text = "Display Color Map";
-            this.DisplayColorMapButton.UseVisualStyleBackColor = true;
-            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -716,6 +728,7 @@ namespace FiniteDifferenceMethod
             this.flowLayoutPanel1.PerformLayout();
             this.flowLayoutPanel3.ResumeLayout(false);
             this.flowLayoutPanel3.PerformLayout();
+            this.tableLayoutPanel4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.DrawArea)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
@@ -746,7 +759,6 @@ namespace FiniteDifferenceMethod
             this.flowLayoutPanel14.PerformLayout();
             this.flowLayoutPanel15.ResumeLayout(false);
             this.flowLayoutPanel15.PerformLayout();
-            this.tableLayoutPanel4.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
