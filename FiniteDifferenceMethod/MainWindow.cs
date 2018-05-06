@@ -22,6 +22,11 @@ namespace FiniteDifferenceMethod
         public MainWindow()
         {
             InitializeComponent();
+            DisplayColorMapButton.Enabled = false;
+            ResultButton.Enabled = false;
+            ResetButton.Enabled = false;
+            DrawingFinishedButton.Enabled = false;
+
             IterationsTextBox.Enabled = false;
             _polygonPointsList = new List<Point>();
             _displayElementsValues2DArray = new DisplayElement[DrawArea.Height][];
@@ -55,9 +60,14 @@ namespace FiniteDifferenceMethod
 
         private void DrawArea_MouseUp(object sender, MouseEventArgs e)
         {
+            ResetButton.Enabled = true;
             if (!_drawingAllowed) return;
             if (_pointIndex > 0)
             {
+                if (_pointIndex > 1)
+                {
+                    DrawingFinishedButton.Enabled = true;
+                }
                 var xDiff = Math.Abs(_previousX - e.X);
                 var yDiff = Math.Abs(_previousY - e.Y);
 
@@ -113,12 +123,13 @@ namespace FiniteDifferenceMethod
             _drawingAllowed = true;
             _polygonPointsList.Clear();
             _pointIndex = 0;
-            Finished.Enabled = true;
+            DrawingFinishedButton.Enabled = true;
             Refresh();
         }
 
         private void Finished_Click(object sender, EventArgs e)
         {
+            ResultButton.Enabled = true;
             if (_polygonPointsList[_pointIndex - 1] != _polygonPointsList[0])
                 if (_lastX)
                 {
@@ -190,7 +201,7 @@ namespace FiniteDifferenceMethod
                 }
 
             _drawingAllowed = false;
-            Finished.Enabled = false;
+            DrawingFinishedButton.Enabled = false;
 
             for (var i = 0; i < DrawArea.Height; i++)
             for (var j = 0; j < DrawArea.Width; j++)
@@ -223,6 +234,7 @@ namespace FiniteDifferenceMethod
 
         private void Result_Click(object sender, EventArgs e)
         {
+            DisplayColorMapButton.Enabled = true;
             var x = new List<int>();
             var y = new List<int>();
             _numberOfIterations = 0;
