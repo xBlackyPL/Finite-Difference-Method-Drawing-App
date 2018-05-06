@@ -47,12 +47,16 @@ namespace FiniteDifferenceMethod
             this.DrawArea = new System.Windows.Forms.PictureBox();
             this.ResetButton = new System.Windows.Forms.Button();
             this.Finished = new System.Windows.Forms.Button();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.IterationsLabel = new System.Windows.Forms.Label();
+            this.IterationsTextBox = new System.Windows.Forms.TextBox();
             this.ApplicationMainWindowLayout.SuspendLayout();
             this.ApplicationToolBox.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DrawArea)).BeginInit();
+            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // ApplicationMainWindowLayout
@@ -69,6 +73,7 @@ namespace FiniteDifferenceMethod
             this.ApplicationMainWindowLayout.Controls.Add(this.DrawArea, 1, 0);
             this.ApplicationMainWindowLayout.Controls.Add(this.ResetButton, 1, 1);
             this.ApplicationMainWindowLayout.Controls.Add(this.Finished, 2, 1);
+            this.ApplicationMainWindowLayout.Controls.Add(this.tableLayoutPanel1, 0, 1);
             this.ApplicationMainWindowLayout.Location = new System.Drawing.Point(0, 0);
             this.ApplicationMainWindowLayout.Margin = new System.Windows.Forms.Padding(0);
             this.ApplicationMainWindowLayout.Name = "ApplicationMainWindowLayout";
@@ -261,6 +266,38 @@ namespace FiniteDifferenceMethod
             this.Finished.UseVisualStyleBackColor = true;
             this.Finished.Click += new System.EventHandler(this.Finished_Click);
             // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 60.41667F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 39.58333F));
+            this.tableLayoutPanel1.Controls.Add(this.IterationsLabel, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.IterationsTextBox, 0, 0);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(737, 526);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 1;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(144, 34);
+            this.tableLayoutPanel1.TabIndex = 12;
+            // 
+            // IterationsLabel
+            // 
+            this.IterationsLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.IterationsLabel.AutoSize = true;
+            this.IterationsLabel.Location = new System.Drawing.Point(4, 10);
+            this.IterationsLabel.Name = "IterationsLabel";
+            this.IterationsLabel.Size = new System.Drawing.Size(50, 13);
+            this.IterationsLabel.TabIndex = 0;
+            this.IterationsLabel.Text = "Iterations";
+            // 
+            // IterationsTextBox
+            // 
+            this.IterationsTextBox.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.IterationsTextBox.Location = new System.Drawing.Point(60, 7);
+            this.IterationsTextBox.Name = "IterationsTextBox";
+            this.IterationsTextBox.Size = new System.Drawing.Size(81, 20);
+            this.IterationsTextBox.TabIndex = 1;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -284,6 +321,8 @@ namespace FiniteDifferenceMethod
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DrawArea)).EndInit();
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -307,6 +346,9 @@ namespace FiniteDifferenceMethod
         private Label LinePotentialLabel;
         private Button Result;
         private Button Finished;
+        private TableLayoutPanel tableLayoutPanel1;
+        private Label IterationsLabel;
+        private TextBox IterationsTextBox;
     }
 }
 

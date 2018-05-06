@@ -22,6 +22,7 @@ namespace FiniteDifferenceMethod
         public MainWindow()
         {
             InitializeComponent();
+            IterationsTextBox.Enabled = false;
             _polygonPointsList = new List<Point>();
             _displayElementsValues2DArray = new DisplayElement[DrawArea.Height][];
             for (var i = 0; i < DrawArea.Height; i++)
@@ -224,6 +225,7 @@ namespace FiniteDifferenceMethod
         {
             var x = new List<int>();
             var y = new List<int>();
+            _numberOfIterations = 0;
 
             for (var i = 0; i < _displayElementsValues2DArray.Length; i++)
             for (var j = 0; j < _displayElementsValues2DArray[i].Length; j++)
@@ -257,14 +259,7 @@ namespace FiniteDifferenceMethod
                 }
             }
 
-            foreach (var row in _displayElementsValues2DArray)
-            {
-                foreach (var element in row)
-                {
-                    System.Console.Write(element.Value + @" ");                    
-                }
-                System.Console.WriteLine();
-            }
+            IterationsTextBox.Text = _numberOfIterations.ToString();
         }
     }
 }
