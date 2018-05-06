@@ -221,6 +221,7 @@ namespace FiniteDifferenceMethod
             this.Result.TabIndex = 10;
             this.Result.Text = "Calculate Result";
             this.Result.UseVisualStyleBackColor = true;
+            this.Result.Click += new System.EventHandler(this.Result_Click);
             // 
             // DrawArea
             // 

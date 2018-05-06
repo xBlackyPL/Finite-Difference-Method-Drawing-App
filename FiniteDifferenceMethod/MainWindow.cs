@@ -17,7 +17,7 @@ namespace FiniteDifferenceMethod
         private bool _lastX;
         private int _previousX = -1;
         private int _previousY = -1;
-
+        private int _numberOfIterations = 0;
 
         public MainWindow()
         {
@@ -66,11 +66,11 @@ namespace FiniteDifferenceMethod
                     _polygonPointsList.Add(new Point(e.X, _previousY));
 
                     if (_previousX > e.X)
-                        for (var i = e.X; i < _previousX; i++)
+                        for (var i = e.X; i <= _previousX; i++)
                             _displayElementsValues2DArray[_previousY][i].Value = double.Parse(linePotentialTextBox.Text,
                                 CultureInfo.InvariantCulture);
                     else
-                        for (var i = _previousX; i < e.X; i++)
+                        for (var i = _previousX; i <= e.X; i++)
                             _displayElementsValues2DArray[_previousY][i].Value = double.Parse(linePotentialTextBox.Text,
                                 CultureInfo.InvariantCulture);
 
@@ -82,11 +82,11 @@ namespace FiniteDifferenceMethod
                     _polygonPointsList.Add(new Point(_previousX, e.Y));
 
                     if (_previousY > e.Y)
-                        for (var i = e.Y; i < _previousY; i++)
+                        for (var i = e.Y; i <= _previousY; i++)
                             _displayElementsValues2DArray[i][_previousX].Value = double.Parse(linePotentialTextBox.Text,
                                 CultureInfo.InvariantCulture);
                     else
-                        for (var i = _previousY; i < e.Y; i++)
+                        for (var i = _previousY; i <= e.Y; i++)
                             _displayElementsValues2DArray[i][_previousX].Value = double.Parse(linePotentialTextBox.Text,
                                 CultureInfo.InvariantCulture);
 
@@ -126,33 +126,33 @@ namespace FiniteDifferenceMethod
 
                     _polygonPointsList.Add(new Point(_previousX, newY));
                     if (_previousY > newY)
-                        for (var i = newY; i < _previousY; i++)
+                        for (var i = newY; i <= _previousY; i++)
                             _displayElementsValues2DArray[i][_previousX].Value = double.Parse(linePotentialTextBox.Text,
                                 CultureInfo.InvariantCulture);
                     else
-                        for (var i = _previousY; i < newY; i++)
+                        for (var i = _previousY; i <= newY; i++)
                             _displayElementsValues2DArray[i][_previousX].Value = double.Parse(linePotentialTextBox.Text,
                                 CultureInfo.InvariantCulture);
 
                     _previousY = newY;
                     _polygonPointsList.Add(new Point(newX, newY));
                     if (_previousX > newX)
-                        for (var i = newX; i < _previousX; i++)
+                        for (var i = newX; i <= _previousX; i++)
                             _displayElementsValues2DArray[_previousY][i].Value = double.Parse(linePotentialTextBox.Text,
                                 CultureInfo.InvariantCulture);
                     else
-                        for (var i = _previousX; i < newX; i++)
+                        for (var i = _previousX; i <= newX; i++)
                             _displayElementsValues2DArray[_previousY][i].Value = double.Parse(linePotentialTextBox.Text,
                                 CultureInfo.InvariantCulture);
 
                     newY = _polygonPointsList[0].Y;
                     _polygonPointsList.Add(new Point(newX, newY));
                     if (_previousY > newY)
-                        for (var i = newY; i < _previousY; i++)
+                        for (var i = newY; i <= _previousY; i++)
                             _displayElementsValues2DArray[i][_previousX].Value = double.Parse(linePotentialTextBox.Text,
                                 CultureInfo.InvariantCulture);
                     else
-                        for (var i = _previousY; i < newY; i++)
+                        for (var i = _previousY; i <= newY; i++)
                             _displayElementsValues2DArray[i][_previousX].Value = double.Parse(linePotentialTextBox.Text,
                                 CultureInfo.InvariantCulture);
 
@@ -165,22 +165,22 @@ namespace FiniteDifferenceMethod
 
                     _polygonPointsList.Add(new Point(newX, _previousY));
                     if (_previousX > newX)
-                        for (var i = newX; i < _previousX; i++)
+                        for (var i = newX; i <= _previousX; i++)
                             _displayElementsValues2DArray[_previousY][i].Value = double.Parse(linePotentialTextBox.Text,
                                 CultureInfo.InvariantCulture);
                     else
-                        for (var i = _previousX; i < newX; i++)
+                        for (var i = _previousX; i <= newX; i++)
                             _displayElementsValues2DArray[_previousY][i].Value = double.Parse(linePotentialTextBox.Text,
                                 CultureInfo.InvariantCulture);
 
                     _previousX = newX;
                     _polygonPointsList.Add(new Point(newX, newY));
                     if (_previousY > newY)
-                        for (var i = newY; i < _previousY; i++)
+                        for (var i = newY; i <= _previousY; i++)
                             _displayElementsValues2DArray[i][_previousX].Value = double.Parse(linePotentialTextBox.Text,
                                 CultureInfo.InvariantCulture);
                     else
-                        for (var i = _previousY; i < newY; i++)
+                        for (var i = _previousY; i <= newY; i++)
                             _displayElementsValues2DArray[i][_previousX].Value = double.Parse(linePotentialTextBox.Text,
                                 CultureInfo.InvariantCulture);
 
@@ -190,6 +190,24 @@ namespace FiniteDifferenceMethod
 
             _drawingAllowed = false;
             Finished.Enabled = false;
+
+            for (var i = 0; i < DrawArea.Height; i++)
+            for (var j = 0; j < DrawArea.Width; j++)
+            {
+                if (!(_displayElementsValues2DArray[i][j].Value > -1)) continue;
+                j++;
+                if (_displayElementsValues2DArray[i][j].Value > -1) break;
+
+                if (j >= _displayElementsValues2DArray[i].Length - 1) continue;
+
+                while (true)
+                {
+                    _displayElementsValues2DArray[i][j++].Value = 0;
+                    if (j >= _displayElementsValues2DArray[i].Length - 1) break;
+                    if (_displayElementsValues2DArray[i][j].Value > -1) break;
+                }
+            }
+
             Refresh();
         }
 
@@ -200,6 +218,53 @@ namespace FiniteDifferenceMethod
 
             if (!double.TryParse(betaTextBox.Text, NumberStyles.Number, CultureInfo.InvariantCulture, out _beta))
                 MessageBox.Show(@"Invalid beta value", @"Invalid value");
+        }
+
+        private void Result_Click(object sender, EventArgs e)
+        {
+            var x = new List<int>();
+            var y = new List<int>();
+
+            for (var i = 0; i < _displayElementsValues2DArray.Length; i++)
+            for (var j = 0; j < _displayElementsValues2DArray[i].Length; j++)
+            {
+                if (!(Math.Abs(_displayElementsValues2DArray[i][j].Value) < 0.0001)) continue;
+                if (Math.Abs(_displayElementsValues2DArray[i][j].Value - (-1)) < 0.0001) continue;
+                x.Add(j);
+                y.Add(i);
+            }
+
+            var isFinished = false;
+            while (!isFinished)
+            {
+                _numberOfIterations++;
+                isFinished = true;
+
+                for (var i = 0; i < x.Count; i++)
+                {
+                    var tmpValue = _displayElementsValues2DArray[y[i]][x[i]].Value;
+
+                    _displayElementsValues2DArray[y[i]][x[i]].Value =
+                        (1 - _beta) * _displayElementsValues2DArray[y[i]][x[i]].Value +
+                        _beta * ((
+                                     _displayElementsValues2DArray[y[i]-1][x[i]].Value +
+                                     _displayElementsValues2DArray[y[i ]+1][x[i]].Value +
+                                     _displayElementsValues2DArray[y[i]][x[i]-1].Value +
+                                     _displayElementsValues2DArray[y[i]][x[i]+1].Value
+                                 ) / 4.0);
+                    if (Math.Abs(tmpValue - _displayElementsValues2DArray[y[i]][x[i]].Value) > _epsilon)
+                        isFinished = false;
+                }
+            }
+
+            foreach (var row in _displayElementsValues2DArray)
+            {
+                foreach (var element in row)
+                {
+                    System.Console.Write(element.Value + @" ");                    
+                }
+                System.Console.WriteLine();
+            }
         }
     }
 }
