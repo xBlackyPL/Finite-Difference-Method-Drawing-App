@@ -18,7 +18,7 @@ namespace FiniteDifferenceMethod
         public DisplayElement(int x, int y)
         {
             Position = new Point(x,y);
-            Value = -1;
+            Value = -99;
         }
 
         public Point Position { get; set; }

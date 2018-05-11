@@ -9,7 +9,8 @@ namespace FiniteDifferenceMethod
     public partial class MainWindow : Form
     {
         private readonly List<Point> _polygonPointsList;
-        private readonly DisplayElement[][] _displayElementsValues2DArray;
+        private DisplayElement[][] _displayElementsValues2DArray;
+        private DisplayElement[][] _displayElementsValues2DArrayCopy;
         private int _pointIndex;
         private double _epsilon = 0.0001;
         private double _beta = 0.1;
@@ -19,6 +20,7 @@ namespace FiniteDifferenceMethod
         private int _previousY = -1;
         private int _numberOfIterations = 0;
         private double _maxValue = 0;
+        private double _minValue = 0;
 
         public MainWindow()
         {
@@ -31,13 +33,18 @@ namespace FiniteDifferenceMethod
             IterationsTextBox.Enabled = false;
             _polygonPointsList = new List<Point>();
             _displayElementsValues2DArray = new DisplayElement[DrawArea.Height][];
+            _displayElementsValues2DArrayCopy = new DisplayElement[DrawArea.Height][];
             for (var i = 0; i < DrawArea.Height; i++)
             {
                 _displayElementsValues2DArray[i] = new DisplayElement[DrawArea.Width];
-                for (var j = 0; j < DrawArea.Width; j++) _displayElementsValues2DArray[i][j] = new DisplayElement(j, i);
+                _displayElementsValues2DArrayCopy[i] = new DisplayElement[DrawArea.Width];
+                for (var j = 0; j < DrawArea.Width; j++)
+                {
+                    _displayElementsValues2DArray[i][j] = new DisplayElement(j, i);
+                    _displayElementsValues2DArrayCopy[i][j] = new DisplayElement(j, i);
+                }
             }
-
-
+            
             betaTextBox.Text = _beta.ToString("F4", CultureInfo.InvariantCulture);
             epsilonTextBox.Text = _epsilon.ToString("F4", CultureInfo.InvariantCulture);
             linePotentialTextBox.Text = 1.ToString("F4", CultureInfo.InvariantCulture);
@@ -125,6 +132,27 @@ namespace FiniteDifferenceMethod
             _polygonPointsList.Clear();
             _pointIndex = 0;
             DrawingFinishedButton.Enabled = true;
+            _displayElementsValues2DArray = null;
+            _displayElementsValues2DArrayCopy = null;
+            _displayElementsValues2DArray = new DisplayElement[DrawArea.Height][];
+            _displayElementsValues2DArrayCopy = new DisplayElement[DrawArea.Height][];
+            for (var i = 0; i < DrawArea.Height; i++)
+            {
+                _displayElementsValues2DArray[i] = new DisplayElement[DrawArea.Width];
+                _displayElementsValues2DArrayCopy[i] = new DisplayElement[DrawArea.Width];
+                for (var j = 0; j < DrawArea.Width; j++)
+                {
+                    _displayElementsValues2DArray[i][j] = new DisplayElement(j, i);
+                    _displayElementsValues2DArrayCopy[i][j] = new DisplayElement(j, i);
+                    ((Bitmap)DrawArea.Image).SetPixel(j, i, Color.White);                    
+                }
+            }     
+
+            IterationsTextBox.Text = "";
+            ResultButton.Enabled = false;
+            DisplayColorMapButton.Enabled = false;
+
+            DrawArea.Refresh();
             Refresh();
         }
 
@@ -207,9 +235,9 @@ namespace FiniteDifferenceMethod
             for (var i = 0; i < DrawArea.Height; i++)
             for (var j = 0; j < DrawArea.Width; j++)
             {
-                if (!(_displayElementsValues2DArray[i][j].Value > -1)) continue;
+                if (!(_displayElementsValues2DArray[i][j].Value > -99)) continue;
                 j++;
-                if (_displayElementsValues2DArray[i][j].Value > -1) break;
+                if (_displayElementsValues2DArray[i][j].Value > -99) break;
 
                 if (j >= _displayElementsValues2DArray[i].Length - 1) continue;
 
@@ -217,15 +245,20 @@ namespace FiniteDifferenceMethod
                 {
                     _displayElementsValues2DArray[i][j++].Value = 0;
                     if (j >= _displayElementsValues2DArray[i].Length - 1) break;
-                    if (_displayElementsValues2DArray[i][j].Value > -1) break;
+                    if (_displayElementsValues2DArray[i][j].Value > -99) break;
                 }
             }
+
+            _displayElementsValues2DArrayCopy = (DisplayElement[][])_displayElementsValues2DArray.Clone();
 
             Refresh();
         }
 
         private void ApplyValuesButton_Click(object sender, EventArgs e)
         {
+            _displayElementsValues2DArray = (DisplayElement[][])_displayElementsValues2DArrayCopy.Clone();
+            _numberOfIterations = 0;
+            
             if (!double.TryParse(epsilonTextBox.Text, NumberStyles.Number, CultureInfo.InvariantCulture, out _epsilon))
                 MessageBox.Show(@"Invalid epsilon value", @"Invalid value");
 
@@ -244,7 +277,7 @@ namespace FiniteDifferenceMethod
             for (var j = 0; j < _displayElementsValues2DArray[i].Length; j++)
             {
                 if (!(Math.Abs(_displayElementsValues2DArray[i][j].Value) < 0.0001)) continue;
-                if (Math.Abs(_displayElementsValues2DArray[i][j].Value - (-1)) < 0.0001) continue;
+                if (Math.Abs(_displayElementsValues2DArray[i][j].Value - (-99)) < 0.0001) continue;
                 x.Add(j);
                 y.Add(i);
             }
@@ -253,8 +286,7 @@ namespace FiniteDifferenceMethod
             while (!isFinished)
             {
                 _numberOfIterations++;
-                isFinished = true;
-                
+                isFinished = true;                
 
                 for (var i = 0; i < x.Count; i++)
                 {
@@ -268,39 +300,42 @@ namespace FiniteDifferenceMethod
                                      _displayElementsValues2DArray[y[i]][x[i]-1].Value +
                                      _displayElementsValues2DArray[y[i]][x[i]+1].Value
                                  ) / 4.0);
-                    if (Math.Abs(tmpValue - _displayElementsValues2DArray[y[i]][x[i]].Value) > _epsilon)
+                    if (Math.Abs(Math.Abs(tmpValue) - Math.Abs(_displayElementsValues2DArray[y[i]][x[i]].Value)) > _epsilon)
                         isFinished = false;
                     if (tmpValue > _maxValue) _maxValue = tmpValue;
+                    if (tmpValue < _minValue) _minValue = tmpValue;
                 }
             }
 
+
+            
             IterationsTextBox.Text = _numberOfIterations.ToString();
         }
 
         private void DisplayColorMapButton_Click(object sender, EventArgs e)
         {
-            var step = _maxValue / 11;
+            var step = (_maxValue + Math.Abs(_minValue)) / 11;
             DrawArea.Image = new Bitmap(DrawArea.Width,DrawArea.Height);
-            
-            LabelLevel0.Text = step.ToString("F4") + @" - " + 0.ToString("F4");
-            LabelLevel1.Text = (2 * step).ToString("F4") + @" - " + step.ToString("F4");
-            LabelLevel2.Text = (3 * step).ToString("F4") + @" - " + (2 * step).ToString("F4");
-            LabelLevel3.Text = (4 * step).ToString("F4") + @" - " + (3 * step).ToString("F4");
-            LabelLevel4.Text = (5 * step).ToString("F4") + @" - " + (4 * step).ToString("F4");
-            LabelLevel5.Text = (6 * step).ToString("F4") + @" - " + (5 * step).ToString("F4");
-            LabelLevel6.Text = (7 * step).ToString("F4") + @" - " + (6 * step).ToString("F4");
-            LabelLevel7.Text = (8 * step).ToString("F4") + @" - " + (7 * step).ToString("F4");
-            LabelLevel8.Text = (9 * step).ToString("F4") + @" - " + (8 * step).ToString("F4");
-            LabelLevel9.Text = (10 * step).ToString("F4") + @" - " + (9 * step).ToString("F4");
-            LabelLevel10.Text = _maxValue.ToString("F4") + @" - " + (10 * step).ToString("F4");
+            var rightBorder = _minValue + step;
+            var leftBorder = _minValue;
 
+            Label[] labels =
+            {
+                LabelLevel0, LabelLevel1,LabelLevel2,LabelLevel3,LabelLevel4,LabelLevel5,LabelLevel6,LabelLevel7,LabelLevel8,LabelLevel9,LabelLevel10
+            };
 
+            foreach (var label in labels)
+            {
+                label.Text = rightBorder.ToString("F4") + @" - " + leftBorder.ToString("F4");
+                leftBorder = rightBorder;
+                rightBorder += step;
+            }
 
             for (var i = 0; i < _displayElementsValues2DArray.Length; i++)
             {
                 for (var j = 0; j < _displayElementsValues2DArray[i].Length; j++)
                 {
-                    if (Math.Abs(_displayElementsValues2DArray[i][j].Value - (-1)) < 0.0001)
+                    if (Math.Abs(_displayElementsValues2DArray[i][j].Value - (-99)) < 0.0001)
                     {
                         ((Bitmap)DrawArea.Image).SetPixel(j,i,Color.Black);
                         continue;
