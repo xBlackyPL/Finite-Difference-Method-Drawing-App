@@ -15,8 +15,8 @@ namespace FiniteDifferenceMethod
         private bool _drawingAllowed = true;
         private double _epsilon = 0.001;
         private bool _lastX;
-        private double _maxValue;
-        private double _minValue;
+        private double _maxValue = 0;
+        private double _minValue = 1;
         private int _numberOfIterations;
         private int _pointIndex;
         private int _previousX = -1;
@@ -132,6 +132,7 @@ namespace FiniteDifferenceMethod
             _displayElementsValues2DArrayCopy = null;
             _displayElementsValues2DArray = new DisplayElement[DrawArea.Height][];
             _displayElementsValues2DArrayCopy = new DisplayElement[DrawArea.Height][];
+
             for (var i = 0; i < DrawArea.Height; i++)
             {
                 _displayElementsValues2DArray[i] = new DisplayElement[DrawArea.Width];
@@ -278,11 +279,13 @@ namespace FiniteDifferenceMethod
 
             if (!double.TryParse(betaTextBox.Text, NumberStyles.Number, CultureInfo.InvariantCulture, out _beta))
                 MessageBox.Show(@"Invalid beta value", @"Invalid value");
+
+            ResetButton.Enabled = true;
         }
 
         private void Result_Click(object sender, EventArgs e)
         {
-            DisplayColorMapButton.Enabled = true;
+            
             var x = new List<int>();
             var y = new List<int>();
             _numberOfIterations = 0;
@@ -321,8 +324,7 @@ namespace FiniteDifferenceMethod
                     if (tmpValue < _minValue) _minValue = tmpValue;
                 }
             }
-
-
+            DisplayColorMapButton.Enabled = true;
             IterationsTextBox.Text = _numberOfIterations.ToString();
         }
 
@@ -431,6 +433,18 @@ namespace FiniteDifferenceMethod
             }
 
             DrawArea.Refresh();
+        }
+
+        private void betaTextBox_TextChanged(object sender, EventArgs e)
+        {
+            ResultButton.Enabled = false;
+            DisplayColorMapButton.Enabled = false;
+        }
+
+        private void epsilonTextBox_TextChanged(object sender, EventArgs e)
+        {
+            ResultButton.Enabled = false;
+            DisplayColorMapButton.Enabled = false;
         }
     }
 }

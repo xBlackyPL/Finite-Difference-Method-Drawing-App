@@ -187,6 +187,7 @@ namespace FiniteDifferenceMethod
             this.betaTextBox.Name = "betaTextBox";
             this.betaTextBox.Size = new System.Drawing.Size(59, 22);
             this.betaTextBox.TabIndex = 3;
+            this.betaTextBox.TextChanged += new System.EventHandler(this.betaTextBox_TextChanged);
             // 
             // BetaLabel
             // 
@@ -251,6 +252,7 @@ namespace FiniteDifferenceMethod
             this.epsilonTextBox.Name = "epsilonTextBox";
             this.epsilonTextBox.Size = new System.Drawing.Size(59, 22);
             this.epsilonTextBox.TabIndex = 3;
+            this.epsilonTextBox.TextChanged += new System.EventHandler(this.epsilonTextBox_TextChanged);
             // 
             // EpsilonLabel
             // 
