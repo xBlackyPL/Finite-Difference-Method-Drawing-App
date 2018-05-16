@@ -21,6 +21,12 @@ namespace FiniteDifferenceMethod
             Value = -99;
         }
 
+        public DisplayElement(Point point, double val)
+        {
+            Position = new Point(point.X,point.Y);
+            Value = val;
+        }
+
         public Point Position { get; set; }
         public double Value;
     }

@@ -9,18 +9,18 @@ namespace FiniteDifferenceMethod
     public partial class MainWindow : Form
     {
         private readonly List<Point> _polygonPointsList;
+        private double _beta = 1.2;
         private DisplayElement[][] _displayElementsValues2DArray;
         private DisplayElement[][] _displayElementsValues2DArrayCopy;
-        private int _pointIndex;
-        private double _epsilon = 0.0001;
-        private double _beta = 0.1;
         private bool _drawingAllowed = true;
+        private double _epsilon = 0.001;
         private bool _lastX;
+        private double _maxValue;
+        private double _minValue;
+        private int _numberOfIterations;
+        private int _pointIndex;
         private int _previousX = -1;
         private int _previousY = -1;
-        private int _numberOfIterations = 0;
-        private double _maxValue = 0;
-        private double _minValue = 0;
 
         public MainWindow()
         {
@@ -32,19 +32,18 @@ namespace FiniteDifferenceMethod
 
             IterationsTextBox.Enabled = false;
             _polygonPointsList = new List<Point>();
+
+
             _displayElementsValues2DArray = new DisplayElement[DrawArea.Height][];
-            _displayElementsValues2DArrayCopy = new DisplayElement[DrawArea.Height][];
             for (var i = 0; i < DrawArea.Height; i++)
             {
                 _displayElementsValues2DArray[i] = new DisplayElement[DrawArea.Width];
-                _displayElementsValues2DArrayCopy[i] = new DisplayElement[DrawArea.Width];
                 for (var j = 0; j < DrawArea.Width; j++)
                 {
                     _displayElementsValues2DArray[i][j] = new DisplayElement(j, i);
-                    _displayElementsValues2DArrayCopy[i][j] = new DisplayElement(j, i);
                 }
             }
-            
+
             betaTextBox.Text = _beta.ToString("F4", CultureInfo.InvariantCulture);
             epsilonTextBox.Text = _epsilon.ToString("F4", CultureInfo.InvariantCulture);
             linePotentialTextBox.Text = 1.ToString("F4", CultureInfo.InvariantCulture);
@@ -72,10 +71,7 @@ namespace FiniteDifferenceMethod
             if (!_drawingAllowed) return;
             if (_pointIndex > 0)
             {
-                if (_pointIndex > 1)
-                {
-                    DrawingFinishedButton.Enabled = true;
-                }
+                if (_pointIndex > 1) DrawingFinishedButton.Enabled = true;
                 var xDiff = Math.Abs(_previousX - e.X);
                 var yDiff = Math.Abs(_previousY - e.Y);
 
@@ -139,14 +135,12 @@ namespace FiniteDifferenceMethod
             for (var i = 0; i < DrawArea.Height; i++)
             {
                 _displayElementsValues2DArray[i] = new DisplayElement[DrawArea.Width];
-                _displayElementsValues2DArrayCopy[i] = new DisplayElement[DrawArea.Width];
                 for (var j = 0; j < DrawArea.Width; j++)
                 {
                     _displayElementsValues2DArray[i][j] = new DisplayElement(j, i);
-                    _displayElementsValues2DArrayCopy[i][j] = new DisplayElement(j, i);
-                    ((Bitmap)DrawArea.Image).SetPixel(j, i, Color.White);                    
+                    ((Bitmap) DrawArea.Image).SetPixel(j, i, Color.White);
                 }
-            }     
+            }
 
             IterationsTextBox.Text = "";
             ResultButton.Enabled = false;
@@ -249,15 +243,35 @@ namespace FiniteDifferenceMethod
                 }
             }
 
-            _displayElementsValues2DArrayCopy = (DisplayElement[][])_displayElementsValues2DArray.Clone();
+            _displayElementsValues2DArrayCopy = new DisplayElement[DrawArea.Height][];
+            for (var i = 0; i < DrawArea.Height; i++)
+            {
+                _displayElementsValues2DArrayCopy[i] = new DisplayElement[DrawArea.Width];
+                for (var j = 0; j < DrawArea.Width; j++)
+                {
+                    _displayElementsValues2DArrayCopy[i][j] = new DisplayElement(
+                        _displayElementsValues2DArray[i][j].Position, _displayElementsValues2DArray[i][j].Value);
+                }
+            }
 
             Refresh();
         }
 
         private void ApplyValuesButton_Click(object sender, EventArgs e)
         {
-            _displayElementsValues2DArray = (DisplayElement[][])_displayElementsValues2DArrayCopy.Clone();
             _numberOfIterations = 0;
+
+            _displayElementsValues2DArray = null;
+            _displayElementsValues2DArray = new DisplayElement[DrawArea.Height][];
+            for (var i = 0; i < DrawArea.Height; i++)
+            {
+                _displayElementsValues2DArray[i] = new DisplayElement[DrawArea.Width];
+                for (var j = 0; j < DrawArea.Width; j++)
+                {
+                    _displayElementsValues2DArray[i][j] = new DisplayElement(
+                        _displayElementsValues2DArrayCopy[i][j].Position, _displayElementsValues2DArrayCopy[i][j].Value);
+                }
+            }
             
             if (!double.TryParse(epsilonTextBox.Text, NumberStyles.Number, CultureInfo.InvariantCulture, out _epsilon))
                 MessageBox.Show(@"Invalid epsilon value", @"Invalid value");
@@ -277,7 +291,7 @@ namespace FiniteDifferenceMethod
             for (var j = 0; j < _displayElementsValues2DArray[i].Length; j++)
             {
                 if (!(Math.Abs(_displayElementsValues2DArray[i][j].Value) < 0.0001)) continue;
-                if (Math.Abs(_displayElementsValues2DArray[i][j].Value - (-99)) < 0.0001) continue;
+                if (Math.Abs(_displayElementsValues2DArray[i][j].Value - -99) < 0.0001) continue;
                 x.Add(j);
                 y.Add(i);
             }
@@ -286,21 +300,22 @@ namespace FiniteDifferenceMethod
             while (!isFinished)
             {
                 _numberOfIterations++;
-                isFinished = true;                
+                isFinished = true;
 
                 for (var i = 0; i < x.Count; i++)
                 {
                     var tmpValue = _displayElementsValues2DArray[y[i]][x[i]].Value;
-                    
+
                     _displayElementsValues2DArray[y[i]][x[i]].Value =
                         (1 - _beta) * _displayElementsValues2DArray[y[i]][x[i]].Value +
                         _beta * ((
-                                     _displayElementsValues2DArray[y[i]-1][x[i]].Value +
-                                     _displayElementsValues2DArray[y[i ]+1][x[i]].Value +
-                                     _displayElementsValues2DArray[y[i]][x[i]-1].Value +
-                                     _displayElementsValues2DArray[y[i]][x[i]+1].Value
+                                     _displayElementsValues2DArray[y[i] - 1][x[i]].Value +
+                                     _displayElementsValues2DArray[y[i] + 1][x[i]].Value +
+                                     _displayElementsValues2DArray[y[i]][x[i] - 1].Value +
+                                     _displayElementsValues2DArray[y[i]][x[i] + 1].Value
                                  ) / 4.0);
-                    if (Math.Abs(Math.Abs(tmpValue) - Math.Abs(_displayElementsValues2DArray[y[i]][x[i]].Value)) > _epsilon)
+                    if (Math.Abs(Math.Abs(tmpValue) - Math.Abs(_displayElementsValues2DArray[y[i]][x[i]].Value)) >
+                        _epsilon)
                         isFinished = false;
                     if (tmpValue > _maxValue) _maxValue = tmpValue;
                     if (tmpValue < _minValue) _minValue = tmpValue;
@@ -308,20 +323,20 @@ namespace FiniteDifferenceMethod
             }
 
 
-            
             IterationsTextBox.Text = _numberOfIterations.ToString();
         }
 
         private void DisplayColorMapButton_Click(object sender, EventArgs e)
         {
             var step = (_maxValue + Math.Abs(_minValue)) / 11;
-            DrawArea.Image = new Bitmap(DrawArea.Width,DrawArea.Height);
+            DrawArea.Image = new Bitmap(DrawArea.Width, DrawArea.Height);
             var rightBorder = _minValue + step;
             var leftBorder = _minValue;
 
             Label[] labels =
             {
-                LabelLevel0, LabelLevel1,LabelLevel2,LabelLevel3,LabelLevel4,LabelLevel5,LabelLevel6,LabelLevel7,LabelLevel8,LabelLevel9,LabelLevel10
+                LabelLevel0, LabelLevel1, LabelLevel2, LabelLevel3, LabelLevel4, LabelLevel5, LabelLevel6, LabelLevel7,
+                LabelLevel8, LabelLevel9, LabelLevel10
             };
 
             foreach (var label in labels)
@@ -332,92 +347,89 @@ namespace FiniteDifferenceMethod
             }
 
             for (var i = 0; i < _displayElementsValues2DArray.Length; i++)
+            for (var j = 0; j < _displayElementsValues2DArray[i].Length; j++)
             {
-                for (var j = 0; j < _displayElementsValues2DArray[i].Length; j++)
+                if (Math.Abs(_displayElementsValues2DArray[i][j].Value - -99) < 0.0001)
                 {
-                    if (Math.Abs(_displayElementsValues2DArray[i][j].Value - (-99)) < 0.0001)
-                    {
-                        ((Bitmap)DrawArea.Image).SetPixel(j,i,Color.Black);
-                        continue;
-                    }
-
-                    if (_displayElementsValues2DArray[i][j].Value > 0 &&
-                        _displayElementsValues2DArray[i][j].Value <= step)
-                    {
-                        ((Bitmap)DrawArea.Image).SetPixel(j, i, Color.DarkBlue);
-                        continue;
-                    }
-
-                    if (_displayElementsValues2DArray[i][j].Value >  step &&
-                        _displayElementsValues2DArray[i][j].Value <= 2 * step)
-                    {
-                        ((Bitmap)DrawArea.Image).SetPixel(j, i, Color.Blue);
-                        continue;
-                    }
-                    if (_displayElementsValues2DArray[i][j].Value > 2*step &&
-                        _displayElementsValues2DArray[i][j].Value <= 3 * step)
-                    {
-                        ((Bitmap)DrawArea.Image).SetPixel(j, i, Color.DeepSkyBlue);
-                        continue;
-                    }
-
-                    if (_displayElementsValues2DArray[i][j].Value > 3 * step &&
-                        _displayElementsValues2DArray[i][j].Value <= 4 * step)
-                    {
-                        ((Bitmap)DrawArea.Image).SetPixel(j, i, Color.Aqua);
-                        continue;
-                    }
-
-                    if (_displayElementsValues2DArray[i][j].Value > 4 * step &&
-                        _displayElementsValues2DArray[i][j].Value <= 5 * step)
-                    {
-                        ((Bitmap)DrawArea.Image).SetPixel(j, i, Color.Aquamarine);
-                        continue;
-                    }
-
-                    if (_displayElementsValues2DArray[i][j].Value > 5 * step &&
-                        _displayElementsValues2DArray[i][j].Value <= 6 * step)
-                    {
-                        ((Bitmap)DrawArea.Image).SetPixel(j, i, Color.GreenYellow);
-                        continue;
-                    }
-
-                    if (_displayElementsValues2DArray[i][j].Value > 6 * step &&
-                        _displayElementsValues2DArray[i][j].Value <= 7 * step)
-                    {
-                        ((Bitmap)DrawArea.Image).SetPixel(j, i, Color.Yellow);
-                        continue;
-                    }
-
-                    if (_displayElementsValues2DArray[i][j].Value > 7 * step &&
-                        _displayElementsValues2DArray[i][j].Value <= 8 * step)
-                    {
-                        ((Bitmap)DrawArea.Image).SetPixel(j, i, Color.Gold);
-                        continue;
-                    }
-
-                    if (_displayElementsValues2DArray[i][j].Value > 8 * step &&
-                        _displayElementsValues2DArray[i][j].Value <= 9 * step)
-                    {
-                        ((Bitmap)DrawArea.Image).SetPixel(j, i, Color.Orange);
-                        continue;
-                    }
-
-                    if (_displayElementsValues2DArray[i][j].Value > 9 * step &&
-                        _displayElementsValues2DArray[i][j].Value <= 10 * step)
-                    {
-                        ((Bitmap)DrawArea.Image).SetPixel(j, i, Color.OrangeRed);
-                        continue;
-                    }
-
-                    if (_displayElementsValues2DArray[i][j].Value > 10 * step &&
-                        _displayElementsValues2DArray[i][j].Value <= _maxValue)
-                    {
-                        ((Bitmap)DrawArea.Image).SetPixel(j, i, Color.Red);
-                        continue;
-                    }
+                    ((Bitmap) DrawArea.Image).SetPixel(j, i, Color.Black);
+                    continue;
                 }
+
+                if (_displayElementsValues2DArray[i][j].Value > 0 &&
+                    _displayElementsValues2DArray[i][j].Value <= step)
+                {
+                    ((Bitmap) DrawArea.Image).SetPixel(j, i, Color.DarkBlue);
+                    continue;
+                }
+
+                if (_displayElementsValues2DArray[i][j].Value > step &&
+                    _displayElementsValues2DArray[i][j].Value <= 2 * step)
+                {
+                    ((Bitmap) DrawArea.Image).SetPixel(j, i, Color.Blue);
+                    continue;
+                }
+
+                if (_displayElementsValues2DArray[i][j].Value > 2 * step &&
+                    _displayElementsValues2DArray[i][j].Value <= 3 * step)
+                {
+                    ((Bitmap) DrawArea.Image).SetPixel(j, i, Color.DeepSkyBlue);
+                    continue;
+                }
+
+                if (_displayElementsValues2DArray[i][j].Value > 3 * step &&
+                    _displayElementsValues2DArray[i][j].Value <= 4 * step)
+                {
+                    ((Bitmap) DrawArea.Image).SetPixel(j, i, Color.Aqua);
+                    continue;
+                }
+
+                if (_displayElementsValues2DArray[i][j].Value > 4 * step &&
+                    _displayElementsValues2DArray[i][j].Value <= 5 * step)
+                {
+                    ((Bitmap) DrawArea.Image).SetPixel(j, i, Color.Aquamarine);
+                    continue;
+                }
+
+                if (_displayElementsValues2DArray[i][j].Value > 5 * step &&
+                    _displayElementsValues2DArray[i][j].Value <= 6 * step)
+                {
+                    ((Bitmap) DrawArea.Image).SetPixel(j, i, Color.GreenYellow);
+                    continue;
+                }
+
+                if (_displayElementsValues2DArray[i][j].Value > 6 * step &&
+                    _displayElementsValues2DArray[i][j].Value <= 7 * step)
+                {
+                    ((Bitmap) DrawArea.Image).SetPixel(j, i, Color.Yellow);
+                    continue;
+                }
+
+                if (_displayElementsValues2DArray[i][j].Value > 7 * step &&
+                    _displayElementsValues2DArray[i][j].Value <= 8 * step)
+                {
+                    ((Bitmap) DrawArea.Image).SetPixel(j, i, Color.Gold);
+                    continue;
+                }
+
+                if (_displayElementsValues2DArray[i][j].Value > 8 * step &&
+                    _displayElementsValues2DArray[i][j].Value <= 9 * step)
+                {
+                    ((Bitmap) DrawArea.Image).SetPixel(j, i, Color.Orange);
+                    continue;
+                }
+
+                if (_displayElementsValues2DArray[i][j].Value > 9 * step &&
+                    _displayElementsValues2DArray[i][j].Value <= 10 * step)
+                {
+                    ((Bitmap) DrawArea.Image).SetPixel(j, i, Color.OrangeRed);
+                    continue;
+                }
+
+                if (_displayElementsValues2DArray[i][j].Value > 10 * step &&
+                    _displayElementsValues2DArray[i][j].Value <= _maxValue)
+                    ((Bitmap) DrawArea.Image).SetPixel(j, i, Color.Red);
             }
+
             DrawArea.Refresh();
         }
     }
